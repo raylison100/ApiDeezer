@@ -2,8 +2,9 @@
 const Route = use('Route');
 
 Route.group(() => {
-  Route.any('*', 'CrawlerController.gatewaySync');
-}).prefix('crawler');
+  Route.any('search', 'DeezerController.searchSyncCache');
+  Route.any('*', 'DeezerController.gatewaySyncCache');
+}).prefix('deezer');
 
 Route.group(() => {
   Route.post('create-user', 'AuthController.create');
@@ -14,5 +15,6 @@ Route.group(() => {
   Route.get('logout', 'AuthController.logout');
 }).prefix('autheticate');
 
+Route.get('check/infra', 'HomeController.checkInfra');
+
 Route.any('*', 'HomeController.unauthorized');
-Route.get('check/crawler/infra', 'HomeController.checkCrawlerInfra');
