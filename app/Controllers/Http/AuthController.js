@@ -12,8 +12,8 @@ class AuthController {
      * @param auth
      * @returns {void|*|{limit, strict, types}}
      */
-    async authenticate({request, response, auth}) {
-        const {email, password} = request.all();
+    async authenticate({ request, response, auth }) {
+        const { email, password } = request.all();
         const token = await auth.attempt(email, password);
         return response.json(token);
     }
@@ -24,7 +24,7 @@ class AuthController {
      * @param auth
      * @returns auth {void|*|{limit, strict, types}}
      */
-    async userAuthenticate({response, auth}) {
+    async userAuthenticate({ response, auth }) {
         return response.json(await auth.getUser())
     }
 
@@ -33,10 +33,10 @@ class AuthController {
      * @param response
      * @param auth
      */
-    async revokeToken({response, auth}) {
+    async revokeToken({ response, auth }) {
         const apiToken = auth.getAuthHeader();
         await auth.authenticator('jwt').revokeTokens([apiToken]);
-        return response.json({error: false, message: 'user unauthenticated'});
+        return response.json({ error: false, message: 'user unauthenticated' });
     }
 
     /**
@@ -45,9 +45,9 @@ class AuthController {
      * @param auth
      * @returns {*|{limit, strict, types}|void}
      */
-    async revokeAllTokens({response, auth}) {
+    async revokeAllTokens({ response, auth }) {
         await auth.authenticator('jwt').revokeTokens();
-        return response.json({error: false, message: 'all users unauthenticated'});
+        return response.json({ error: false, message: 'all users unauthenticated' });
     }
 
     /**
@@ -55,13 +55,13 @@ class AuthController {
      * @param response
      * @param auth
      */
-    async logout({response, auth}) {
+    async logout({ response, auth }) {
         const user = await auth.getUser();
         try {
             await auth.authenticator('jwt').revokeTokensForUser(user);
-            return response.json({error: false, message: 'user unauthenticated'});
+            return response.json({ error: false, message: 'user unauthenticated' });
         } catch (error) {
-            return response.json({error: false, message: 'unauthenticated'});
+            return response.json({ error: false, message: 'unauthenticated' });
         }
     }
 
@@ -72,12 +72,14 @@ class AuthController {
      * @param auth
      * @returns {Promise<Boolean|*>}
      */
-    async create({ request, response, auth}) {
-        try {            
+    async create({ request, response, auth }) {
+        try {
             const email = request.input("email")
             const password = request.input("password")
             const name = request.input("name")
-      
+
+            console.log("asdasd")
+
             const userExists = await User.findBy('email', email)
             if (userExists) {
                 return response.status(400).send({
@@ -92,15 +94,15 @@ class AuthController {
             user.fname = name
 
             let success = await user.save()
-            let token  = await auth.attempt(email, password);
-   
+            let token = await auth.attempt(email, password);
+
             return response.status(201).json({
                 status: 'ok',
                 message: 'User is registered',
                 success: success,
                 UserID: user['_id'],
                 token: token
-            })    
+            })
         } catch (error) {
             console.log(error.message)
             response.status(403).json({
@@ -117,11 +119,11 @@ class AuthController {
      * @param response
      * @returns {*}
      */
-    async delete({request, response}) {
-        const {id} = request.all();
+    async delete({ request, response }) {
+        const { id } = request.all();
         const user = await User.find(id);
         await user.delete();
-        return response.json({success: true, message: 'Usuário removido'})
+        return response.json({ success: true, message: 'Usuário removido' })
     }
 
     /**
@@ -130,11 +132,11 @@ class AuthController {
      * @param response
      * @returns {*}
      */
-    async updateUser({request, response}) {
+    async updateUser({ request, response }) {
         const user = await User.find(request.all().id);
         if (user) {
             if (request.all().username === user.email) {
-                user.merge({username: request.all().username, email: request.all().email});
+                user.merge({ username: request.all().username, email: request.all().email });
             } else {
                 user.merge({
                     username: request.all().username,
@@ -145,7 +147,7 @@ class AuthController {
             await user.save();
             return response.json(user)
         }
-        return response.json({error: true, message: "Usuário não existe"})
+        return response.json({ error: true, message: "Usuário não existe" })
     }
 
 }
