@@ -78,8 +78,6 @@ class AuthController {
             const password = request.input("password")
             const name = request.input("name")
 
-            console.log("asdasd")
-
             const userExists = await User.findBy('email', email)
             if (userExists) {
                 return response.status(400).send({
