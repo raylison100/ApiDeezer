@@ -70,11 +70,11 @@ class DeezerController {
   }
 
   /**
- * 
- * @param request
- * @param response
- * @returns {Promise<*>}
- */
+   * 
+   * @param request
+   * @param response
+   * @returns {Promise<*>}
+   */
   async deletePlaylistSync({ request, response }) {
     try {
       var url = this.urlDestiny + request.originalUrl().replace(this.prefix + '/delete/', '')
@@ -94,6 +94,42 @@ class DeezerController {
    * @returns {Promise<*>}
    */
   async createPlaylistSync({ request, response }) {
+    try {
+      var url = this.urlDestiny + request.originalUrl().replace(this.prefix + '/create/', '')
+        + '&access_token=' + Env.get('ACCESS_TOKEN');;
+
+      return await this.send(url, request.method(), { Accept: 'application/json' }, request.body)
+    } catch (err) {
+      let error = err.error;
+      return response.status(err.statusCode).send({ error });
+    }
+  }
+
+  /**
+  * 
+  * @param request
+  * @param response
+  * @returns {Promise<*>}
+  */
+  async deleteTrackSync({ request, response }) {
+    try {
+      var url = this.urlDestiny + request.originalUrl().replace(this.prefix + '/delete/', '')
+        + '&access_token=' + Env.get('ACCESS_TOKEN');;
+
+      return await this.send(url, request.method(), { Accept: 'application/json' }, request.body)
+    } catch (err) {
+      let error = err.error;
+      return response.status(err.statusCode).send({ error });
+    }
+  }
+
+  /**
+   * 
+   * @param request
+   * @param response
+   * @returns {Promise<*>}
+   */
+  async createTrackSync({ request, response }) {
     try {
       var url = this.urlDestiny + request.originalUrl().replace(this.prefix + '/create/', '')
         + '&access_token=' + Env.get('ACCESS_TOKEN');;

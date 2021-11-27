@@ -2,9 +2,12 @@
 const Route = use('Route');
 
 Route.group(() => {
-    Route.any('search', 'DeezerController.searchSyncCache');
+    Route.any('search/playlist', 'DeezerController.searchSyncCache');
     Route.post('create/user/:id/playlists', 'DeezerController.createPlaylistSync');
     Route.delete('delete/user/:id/playlists', 'DeezerController.deletePlaylistSync');
+
+    Route.post('create/user/:id/tracks', 'DeezerController.createTrackSync');
+    Route.delete('delete/user/:id/tracks', 'DeezerController.deleteTrackSync');
     Route.any('*', 'DeezerController.gatewaySyncCache');
 }).prefix('deezer');
 
